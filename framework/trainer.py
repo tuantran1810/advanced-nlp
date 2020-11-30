@@ -46,7 +46,7 @@ class Trainer:
                 with torch.no_grad():
                     totalloss += loss
             log.info("training loss: {:.2f}".format(totalloss/cnt))
-            torch.save(self.__model, model_path + "/{i}.pt")
+            torch.save(self.__model, model_path + "/{}.pt".format(i))
 
             self.__model.eval()
             with torch.no_grad():
