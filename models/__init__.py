@@ -1,0 +1,1 @@
+from .char_prediction import CharPredictionModel
