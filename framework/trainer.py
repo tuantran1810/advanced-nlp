@@ -49,9 +49,9 @@ class Trainer:
                 with torch.no_grad():
                     totalloss += loss
                     if cnt % self.__log_per_samples == 0:
-                        log.info("log per {} samples, {} samples has passed, training loss: {:.2f}".format(self.__log_per_samples, cnt, totalloss/cnt))
+                        log.info("log per {} samples, {} samples has passed, training loss: {:.5f}".format(self.__log_per_samples, cnt, totalloss/cnt))
             with torch.no_grad():
-                log.info("training loss: {:.2f}".format(totalloss/cnt))
+                log.info("training loss: {:.5f}".format(totalloss/cnt))
                 torch.save(self.__model, model_path + "/{}.pt".format(i))
 
             self.__model.eval()
@@ -71,4 +71,4 @@ class Trainer:
                     totalloss += loss
                     totalaccuracy += self.__accuracy(yhat, y)
 
-                log.info("loss = {:.2f}, accuracy = {:.2f}%".format(totalloss/cnt, (totalaccuracy/cnt) * 100))
+                log.info("loss = {:.5f}, accuracy = {:.5f}%".format(totalloss/cnt, (totalaccuracy/cnt) * 100))
