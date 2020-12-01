@@ -1,1 +1,2 @@
 from .char_prediction import CharPredictionModel
+from .text_generator import TextGeneratorModel

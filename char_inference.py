@@ -43,16 +43,18 @@ class CharInference:
             return CharPredictionModel(self.__char_map.vocab_size(), 50, 512)
 
         def inject_optim(model):
-            return optim.Adam(model.parameters(), lr=0.01)
+            return optim.Adam(model.parameters(), lr=0.001)
 
         def inject_loss_fn():
-            return F.cross_entropy
+            def loss(yhat, y):
+                return F.cross_entropy(yhat, torch.flatten(y))
+            return loss
 
         def inject_accuracy_calculator():
             def fn(yhat, y):
                 yhat = F.log_softmax(yhat, dim = 1)
                 tmp = (torch.argmax(yhat, dim = 1) - y) == 0
-                return tmp.sum()
+                return tmp.sum()/y.shape[0]
             return fn
 
         trainer = Trainer(
@@ -65,3 +67,10 @@ class CharInference:
         )
         trainer.train(epochs)
         return trainer.get_model()
+
+def main():
+    char_inference = CharInference("./data/name_data_char_sequences.txt")
+    char_inference.train(5)
+
+if __name__ == "__main__":
+    main()
