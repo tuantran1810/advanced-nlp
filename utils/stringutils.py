@@ -15,9 +15,9 @@ def split_xy_last_char(dataset, get_order):
         nsentence = []
         for c in sentence[:-1]:
             nsentence.append(get_order(c))
-        x.append(nsentence)
+        x.append(np.array(nsentence, dtype=np.int8))
         y.append(get_order(sentence[-1]))
-    return np.array(x), np.array(y)
+    return np.array(x, dtype=np.int8), np.array(y, dtype=np.int8)
 
 def split_xy_left_right(dataset, get_order):
     length = len(dataset[0])
