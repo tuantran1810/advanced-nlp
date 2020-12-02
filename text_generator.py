@@ -35,7 +35,7 @@ class TextGenerator:
 
         log.info(f"receive {len(all_chunks)} records, each has the length of {len(all_chunks[0])} chars, with {len(all_chars)} unique chars")
         char_map = CharMap(all_chars)
-        return split_xy_last_char(all_chunks[:100000], char_map.get_order), char_map
+        return split_xy_last_char(all_chunks, char_map.get_order), char_map
 
     def train(self, epochs):
         def inject_data():
