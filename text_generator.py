@@ -12,7 +12,7 @@ from utils import CharMap, unique_chars, split_xy_last_char
 from models import TextGeneratorModel
 
 class TextGenerator:
-    def __init__(self, datafiles, batch_size = 512):
+    def __init__(self, datafiles, batch_size = 3500):
         (self.__x, self.__y), self.__char_map = self.__prepair_data(datafiles)
         if not os.path.exists("./char-map"):
             os.mkdir("./char-map")
@@ -86,7 +86,7 @@ class TextGenerator:
             inject_optim,
             inject_loss_fn,
             inject_accuracy_calculator,
-            log_per_samples = 100,
+            log_per_samples = 10,
         )
         trainer.train(epochs)
         return trainer.get_model()
