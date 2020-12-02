@@ -5,12 +5,14 @@ from torch import Tensor
 from torch.nn import functional as F
 
 if __name__ == "__main__":
-    tg = TextGeneratorModel(100, 50, 256, 250)
+    cuda_tensor = lambda x: Tensor(x).type(torch.long).cuda()
+
+    tg = TextGeneratorModel(100, 50, 256).cuda()
     x = np.random.randint(0, 100, size = (32, 250))
-    yhat = tg(Tensor(x).type(torch.long)).permute(0,2,1)
+    yhat = tg(cuda_tensor(x))
 
     print(yhat.shape)
-    y = Tensor(np.random.randint(0, 100, size = (32, 250))).type(torch.long)
+    y = cuda_tensor(np.random.randint(0, 100, size = (32,)))
 
     loss = F.cross_entropy(yhat, y)
     print(loss)
@@ -19,3 +21,11 @@ if __name__ == "__main__":
     acc = (torch.argmax(yhat, dim = 1) - y) == 0
     
     print(acc.sum())
+
+    x = cuda_tensor(np.random.randint(0, 100, size = (1, 250)))
+    out, hidden = tg.infer(x, None)
+    print(out)
+
+    x = cuda_tensor(np.random.randint(0, 100, size = (1, 250)))
+    out, _ = tg.infer(x, hidden)
+    print(out)
