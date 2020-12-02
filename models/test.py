@@ -1,13 +1,16 @@
 import numpy as np
 from text_generator import TextGeneratorModel
 import torch
-from torch import Tensor
+from torch import Tensor, optim
 from torch.nn import functional as F
 
 if __name__ == "__main__":
     cuda_tensor = lambda x: Tensor(x).type(torch.long).cuda()
 
     tg = TextGeneratorModel(100, 50, 256).cuda()
+    for name, _ in tg.named_parameters():
+        print(name)
+
     x = np.random.randint(0, 100, size = (32, 250))
     yhat = tg(cuda_tensor(x))
 
@@ -22,10 +25,11 @@ if __name__ == "__main__":
     
     print(acc.sum())
 
+    tg = TextGeneratorModel(100, 50, 256, batch_size = 1).cuda()
     x = cuda_tensor(np.random.randint(0, 100, size = (1, 250)))
     out, hidden = tg.infer(x, None)
     print(out)
 
-    x = cuda_tensor(np.random.randint(0, 100, size = (1, 250)))
+    x = cuda_tensor(np.random.randint(0, 100, size = (1, 1)))
     out, _ = tg.infer(x, hidden)
     print(out)

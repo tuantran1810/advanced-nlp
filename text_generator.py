@@ -12,7 +12,7 @@ from utils import CharMap, unique_chars, split_xy_last_char
 from models import TextGeneratorModel
 
 class TextGenerator:
-    def __init__(self, datafiles, batch_size = 1000):
+    def __init__(self, datafiles, batch_size = 500):
         (self.__x, self.__y), self.__char_map = self.__prepair_data(datafiles)
         if not os.path.exists("./char-map"):
             os.mkdir("./char-map")
@@ -35,7 +35,7 @@ class TextGenerator:
 
         log.info(f"receive {len(all_chunks)} records, each has the length of {len(all_chunks[0])} chars, with {len(all_chars)} unique chars")
         char_map = CharMap(all_chars)
-        return split_xy_last_char(all_chunks, char_map.get_order), char_map
+        return split_xy_last_char(all_chunks[:500000], char_map.get_order), char_map
 
     def train(self, epochs):
         def inject_data():
@@ -57,8 +57,7 @@ class TextGenerator:
                 vocab_size = self.__char_map.vocab_size(), 
                 emb_size = 50, 
                 hidden_lstm = 256,
-                string_length = 249,
-                hidden_fc = 4,
+                hidden_fc = 128,
                 lstm_layers = 2,
                 batch_size=self.__batch_size
             )
