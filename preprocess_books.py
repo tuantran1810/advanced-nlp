@@ -14,7 +14,7 @@ def main():
     log.info("start processing for {} books".format(len(books)))
     for book in books:
         log.info("processing for the book: {}".format(book))
-        BookPreprocessor(bookspath + book).to_chunk(250, pklpath + book)
+        BookPreprocessor(bookspath + book).to_chunk(100, pklpath + book)
 
 if __name__ == "__main__":
     main()

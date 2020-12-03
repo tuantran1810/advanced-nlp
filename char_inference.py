@@ -1,5 +1,8 @@
 from sklearn.model_selection import train_test_split
+import os
+import pickle
 import torch
+from loguru import logger as log
 from torch import Tensor, optim
 from torch.nn import functional as F
 from torch.utils.data import TensorDataset, DataLoader
@@ -11,18 +14,27 @@ from models import CharPredictionModel
 class CharInference:
     def __init__(self, datafile):
         (self.__x, self.__y), self.__char_map = self.__prepair_data(datafile)
-    
-    def __prepair_data(self, file):
-        dataset = []
-        with open(file, "r") as fd:
-            for line in fd.readlines():
-                line = line.strip('\n')
-                dataset.append(line)
+        if not os.path.exists("./char-map"):
+            os.mkdir("./char-map")
+        with open("./char-map/char_inference.pkl", "wb") as fd:
+            pickle.dump(self.__char_map, fd)
 
-        uchars = unique_chars(dataset)
-        char_map = CharMap(uchars)
+    def __prepair_data(self, files):
+        def load_pkl_obj(file):
+            with open(file, 'rb') as fd:
+                return pickle.load(fd)
+            return None
 
-        return split_xy_last_char(dataset, char_map.get_order), char_map
+        all_chunks = list()
+        all_chars = set()
+        for f in files:
+            obj = load_pkl_obj(f)
+            all_chunks.extend(obj.allchunks)
+            all_chars.update(obj.allchars)
+
+        log.info(f"receive {len(all_chunks)} records, each has the length of {len(all_chunks[0])} chars, with {len(all_chars)} unique chars")
+        char_map = CharMap(all_chars)
+        return split_xy_last_char(all_chunks, char_map.get_order), char_map
 
     def train(self, epochs):
         def inject_data():
@@ -69,7 +81,12 @@ class CharInference:
         return trainer.get_model()
 
 def main():
-    char_inference = CharInference("./data/name_data_char_sequences.txt")
+    char_inference = CharInference([
+        "./data/pkl/books/dracula.txt",
+        "./data/pkl/books/moby-dick.txt",
+        "./data/pkl/books/pride-prejudice.txt",
+        "./data/pkl/books/tale-of-two-cities.txt"
+    ])
     char_inference.train(5)
 
 if __name__ == "__main__":

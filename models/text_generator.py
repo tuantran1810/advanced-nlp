@@ -12,6 +12,15 @@ class TextGeneratorModel(nn.Module):
         self.__fc1 = nn.Linear(lstm_layers*hidden_lstm, hidden_fc)
         self.__fc2 = nn.Linear(hidden_fc, vocab_size)
 
+        self.__lstm_layers = lstm_layers
+        self.__hidden_lstm = hidden_lstm
+
+    def init_hidden(self, batch_size):
+        return (
+            torch.zeros(size = (self.__lstm_layers*2, batch_size, self.__hidden_lstm)),
+            torch.zeros(size = (self.__lstm_layers*2, batch_size, self.__hidden_lstm))
+        )
+
     def infer(self, inp, hidden):
         self.eval()
         return self.__forward(inp, hidden)

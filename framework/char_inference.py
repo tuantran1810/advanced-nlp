@@ -18,12 +18,13 @@ class CharInference:
         return out, self.__char_map.char_from_order(out)
         
     def infer(self, nchars):
-        out, hidden = self.__model.infer(self.__init_sentence, None)
-        n, c = self.__char_from_net_output(out)
-        lst = [c]
-        for _ in range(nchars - 1):
-            n = n.unsqueeze(0)
-            out, hidden = self.__model.infer(n, hidden)
+        with torch.no_grad():
+            out, hidden = self.__model.infer(self.__init_sentence, None)
             n, c = self.__char_from_net_output(out)
-            lst.append(c)
+            lst = [c]
+            for _ in range(nchars - 1):
+                n = n.unsqueeze(0)
+                out, hidden = self.__model.infer(n, hidden)
+                n, c = self.__char_from_net_output(out)
+                lst.append(c)
         return lst
