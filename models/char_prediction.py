@@ -5,7 +5,7 @@ class CharPredictionModel(nn.Module):
         super(CharPredictionModel, self).__init__()
         self.__emb = nn.Embedding(vocab_size, emb_size)
         self.__lstm = nn.LSTM(emb_size, hidden_lstm)
-        self.__drop = nn.Dropout(0.15)
+        self.__drop = nn.Dropout(0.3)
         self.__fc = nn.Linear(hidden_lstm, vocab_size)
 
         self.__hidden_lstm = hidden_lstm

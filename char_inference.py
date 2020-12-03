@@ -13,6 +13,7 @@ from models import CharPredictionModel
 
 class CharInference:
     def __init__(self, datafile):
+        self.__batch_size = 32
         (self.__x, self.__y), self.__char_map = self.__prepair_data(datafile)
         if not os.path.exists("./char-map"):
             os.mkdir("./char-map")
@@ -46,13 +47,13 @@ class CharInference:
 
             traindataset = TensorDataset(x_train, y_train)
             testdataset = TensorDataset(x_test, y_test)
-            traindataloader = DataLoader(traindataset, batch_size=256, shuffle=True)
-            testdataloader = DataLoader(testdataset, batch_size=256, shuffle=False)
+            traindataloader = DataLoader(traindataset, self.__batch_size, shuffle=True)
+            testdataloader = DataLoader(testdataset, self.__batch_size, shuffle=False)
 
             return traindataloader, testdataloader
 
         def inject_model():
-            return CharPredictionModel(self.__char_map.vocab_size(), 50, 512)
+            return CharPredictionModel(self.__char_map.vocab_size(), 75, 384)
 
         def inject_optim(model):
             return optim.Adam(model.parameters(), lr=0.001)
@@ -76,6 +77,7 @@ class CharInference:
             inject_optim,
             inject_loss_fn,
             inject_accuracy_calculator,
+            log_per_samples = 10000
         )
         trainer.train(epochs)
         return trainer.get_model()
@@ -85,9 +87,11 @@ def main():
         "./data/pkl/books/dracula.txt",
         "./data/pkl/books/moby-dick.txt",
         "./data/pkl/books/pride-prejudice.txt",
-        "./data/pkl/books/tale-of-two-cities.txt"
+        "./data/pkl/books/tale-of-two-cities.txt",
+        "./data/pkl/books/oliver-twist.txt",
+        "./data/pkl/books/war-and-peace.txt",
     ])
-    char_inference.train(5)
+    char_inference.train(30)
 
 if __name__ == "__main__":
     main()

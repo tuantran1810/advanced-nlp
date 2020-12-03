@@ -6,7 +6,9 @@ def main():
         "dracula.txt",
         "moby-dick.txt",
         "pride-prejudice.txt",
-        "tale-of-two-cities.txt"
+        "tale-of-two-cities.txt",
+        "oliver-twist.txt",
+        "war-and-peace.txt",
     ]
     bookspath = "./data/books/"
     pklpath = "./data/pkl/books/"
