@@ -55,7 +55,7 @@ class TextGenerator:
         def inject_model():
             return TextGeneratorModel(
                 vocab_size = self.__char_map.vocab_size(), 
-                emb_size = 50, 
+                emb_size = 75, 
                 hidden_lstm = 256,
                 hidden_fc = 128,
                 lstm_layers = 2,
@@ -63,7 +63,7 @@ class TextGenerator:
             )
 
         def inject_optim(model):
-            return optim.Adam(model.parameters(), lr=0.001)
+            return optim.Adam(model.parameters(), lr=0.0001)
 
         def inject_loss_fn():
             def loss(yhat, y):
@@ -95,6 +95,8 @@ tg = TextGenerator([
     "./data/pkl/books/moby-dick.txt",
     "./data/pkl/books/pride-prejudice.txt",
     "./data/pkl/books/tale-of-two-cities.txt"
+    "./data/pkl/books/oliver-twist.txt",
+    "./data/pkl/books/war-and-peace.txt",
 ])
 
-tg.train(5)
+tg.train(30)
