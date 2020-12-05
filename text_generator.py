@@ -94,7 +94,7 @@ tg = TextGenerator([
     "./data/pkl/books/dracula.txt",
     "./data/pkl/books/moby-dick.txt",
     "./data/pkl/books/pride-prejudice.txt",
-    "./data/pkl/books/tale-of-two-cities.txt"
+    "./data/pkl/books/tale-of-two-cities.txt",
     "./data/pkl/books/oliver-twist.txt",
     "./data/pkl/books/war-and-peace.txt",
 ])
