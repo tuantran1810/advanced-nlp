@@ -77,7 +77,7 @@ class CharInference:
             inject_optim,
             inject_loss_fn,
             inject_accuracy_calculator,
-            log_per_samples = 10000
+            log_per_samples = 1000
         )
         trainer.train(epochs)
         return trainer.get_model()
